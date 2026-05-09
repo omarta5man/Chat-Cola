@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import Link from "next/link"
+import Image from "next/image"
 import { useLenis } from "lenis/react"
 import { Menu, X, Globe } from "lucide-react"
 import { useLanguage } from "@/lib/language-context"
@@ -33,7 +34,6 @@ export function Navigation() {
     { label: t("nav.home"), href: "#hero" },
     { label: t("nav.flavours"), href: "#flavours" },
     { label: t("nav.about"), href: "#about" },
-    { label: t("nav.contact"), href: "#footer" },
   ]
 
   const toggleLanguage = () => {
@@ -60,24 +60,19 @@ export function Navigation() {
       >
         <div className={`flex items-center justify-between ${scrolled ? "px-4 py-2" : "px-6 py-4"}`}>
           <Link href="/" className="flex items-center gap-2">
-            <motion.span
-              className={`font-black tracking-tighter transition-all duration-300 ${scrolled ? "text-xl" : "text-2xl"}`}
-              whileHover={{ scale: 1.05 }}
+            <motion.div
+              className={`relative transition-all duration-300 ${scrolled ? "w-9 h-9" : "w-11 h-11"}`}
+              whileHover={{ scale: 1.08, rotate: -3 }}
               transition={{ type: "spring", stiffness: 400, damping: 17 }}
             >
-              <span className={scrolled ? "text-white" : "text-[#121212]"}>Chat</span>
-              <motion.span
-                className="text-red-600"
-                animate={{
-                  textShadow: scrolled
-                    ? ["0 0 10px rgba(220,38,38,0.5)", "0 0 20px rgba(220,38,38,0.8)", "0 0 10px rgba(220,38,38,0.5)"]
-                    : "none",
-                }}
-                transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
-              >
-                Cola
-              </motion.span>
-            </motion.span>
+              <Image
+                src="/images/logo.png"
+                alt="Chat Cola"
+                fill
+                className="object-contain"
+                priority
+              />
+            </motion.div>
           </Link>
 
           <div className={`hidden md:flex items-center ${isRTL ? "gap-6" : "gap-6"}`}>
@@ -120,21 +115,21 @@ export function Navigation() {
             </motion.button>
           </div>
 
-          <motion.button
-            className={`hidden md:block px-5 py-2 rounded-full font-bold text-sm tracking-wide relative overflow-hidden transition-all ${
-              scrolled ? "bg-red-600 text-white" : "bg-red-600 text-white"
-            }`}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            transition={{ type: "spring", stiffness: 400, damping: 17 }}
-          >
+          <Link href="/contact" className="hidden md:block">
             <motion.div
-              className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full"
-              animate={{ x: ["-100%", "200%"] }}
-              transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY, repeatDelay: 3 }}
-            />
-            <span className="relative z-10">{t("nav.contactSales")}</span>
-          </motion.button>
+              className="px-5 py-2 rounded-full font-bold text-sm tracking-wide relative overflow-hidden bg-red-600 text-white"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              transition={{ type: "spring", stiffness: 400, damping: 17 }}
+            >
+              <motion.div
+                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent -translate-x-full"
+                animate={{ x: ["-100%", "200%"] }}
+                transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY, repeatDelay: 3 }}
+              />
+              <span className="relative z-10">{t("nav.contactSales")}</span>
+            </motion.div>
+          </Link>
 
           <div className="flex md:hidden items-center gap-3">
             {/* Mobile Language Toggle */}
@@ -204,14 +199,16 @@ export function Navigation() {
                   {item.label}
                 </motion.button>
               ))}
-              <motion.button
-                className="w-full bg-red-600 text-white px-6 py-3 rounded-full font-bold text-sm tracking-wide mt-4"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.3 }}
-              >
-                {t("nav.contactSales")}
-              </motion.button>
+              <Link href="/contact" onClick={() => setMobileMenuOpen(false)}>
+                <motion.div
+                  className="w-full bg-red-600 text-white px-6 py-3 rounded-full font-bold text-sm tracking-wide mt-4 text-center"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3 }}
+                >
+                  {t("nav.contactSales")}
+                </motion.div>
+              </Link>
             </div>
           </motion.div>
         )}

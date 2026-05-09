@@ -31,16 +31,9 @@ const itemVariants = {
 
 export function Footer() {
   const { t, isRTL, language } = useLanguage()
-  const [email, setEmail] = useState("")
   const [isHovering, setIsHovering] = useState(false)
-  const [isSubmitting, setIsSubmitting] = useState(false)
   const footerRef = useRef(null)
   const isInView = useInView(footerRef, { once: true, margin: "-100px" })
-
-  const handleSubmit = () => {
-    setIsSubmitting(true)
-    setTimeout(() => setIsSubmitting(false), 2000)
-  }
 
   const footerLinks = [
     {
@@ -54,6 +47,7 @@ export function Footer() {
         { labelKey: "product.orange", href: "#" },
         { labelKey: "product.apple", href: "#" },
         { labelKey: "product.grape", href: "#" },
+        { labelKey: "product.fruits", href: "#" },
       ],
     },
     {
@@ -114,52 +108,6 @@ export function Footer() {
               {t("footer.heading2")}
             </motion.span>
           </h2>
-        </motion.div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="max-w-xl mx-auto mb-12"
-        >
-          <div className={`flex flex-col sm:flex-row gap-3 ${isRTL ? "sm:flex-row-reverse" : ""}`}>
-            <motion.div className="flex-1 relative" whileFocus={{ scale: 1.02 }}>
-              <motion.input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder={t("footer.emailPlaceholder")}
-                className={`w-full bg-white/5 border-2 border-white/20 rounded-xl px-4 py-3 text-white placeholder:text-white/40 font-mono text-sm focus:outline-none focus:border-red-600 transition-all duration-300 ${isRTL ? "text-right" : "text-left"}`}
-                whileFocus={{ borderColor: "#DC2626" }}
-              />
-              <motion.div
-                className="absolute inset-0 rounded-xl pointer-events-none"
-                animate={email.length > 0 ? { boxShadow: "0 0 20px rgba(175,255,0,0.2)" } : { boxShadow: "none" }}
-              />
-            </motion.div>
-            <motion.button
-              className="bg-red-600 text-white px-6 py-3 rounded-xl font-bold text-sm tracking-wide whitespace-nowrap relative overflow-hidden"
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              transition={{ type: "spring", stiffness: 400, damping: 17 }}
-              onClick={handleSubmit}
-            >
-              <motion.div
-                className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent"
-                initial={{ x: "-100%" }}
-                whileHover={{ x: "100%" }}
-                transition={{ duration: 0.5 }}
-              />
-              <motion.span
-                className="relative z-10"
-                animate={isSubmitting ? { opacity: [1, 0.5, 1] } : {}}
-                transition={{ duration: 0.5, repeat: isSubmitting ? Number.POSITIVE_INFINITY : 0 }}
-              >
-                {isSubmitting ? "..." : t("nav.contactSales")}
-              </motion.span>
-            </motion.button>
-          </div>
         </motion.div>
 
         <motion.p

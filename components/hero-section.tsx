@@ -3,6 +3,8 @@
 import { motion, useScroll, useTransform, useSpring } from "framer-motion"
 import { useRef } from "react"
 import Image from "next/image"
+import Link from "next/link"
+import { useLenis } from "lenis/react"
 import { useLanguage } from "@/lib/language-context"
 
 const springConfig = { stiffness: 100, damping: 30, restDelta: 0.001 }
@@ -37,7 +39,14 @@ const scaleInVariants = {
 
 export function HeroSection() {
   const { t, isRTL } = useLanguage()
+  const lenis = useLenis()
   const ref = useRef(null)
+
+  const scrollToFlavours = () => {
+    const el = document.querySelector("#flavours")
+    if (el && lenis) lenis.scrollTo(el, { offset: -100 })
+    else if (el) (el as HTMLElement).scrollIntoView({ behavior: "smooth" })
+  }
   const { scrollYProgress } = useScroll({
     target: ref,
     offset: ["start start", "end start"],
@@ -152,6 +161,7 @@ export function HeroSection() {
               className="flex flex-wrap gap-3 pt-2"
             >
               <motion.button
+                onClick={scrollToFlavours}
                 className="bg-red-600 text-white px-6 py-3 rounded-full font-bold text-sm tracking-wide flex items-center gap-2 group relative overflow-hidden"
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
@@ -175,14 +185,16 @@ export function HeroSection() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </motion.svg>
               </motion.button>
-              <motion.button
-                className="border-2 border-[#121212] text-[#121212] px-6 py-3 rounded-full font-bold text-sm tracking-wide relative overflow-hidden"
-                whileHover={{ scale: 1.02, backgroundColor: "#DC2626", color: "#fff", borderColor: "#DC2626" }}
-                whileTap={{ scale: 0.98 }}
-                transition={{ type: "spring", stiffness: 400, damping: 17 }}
-              >
-                {t("hero.contactUs")}
-              </motion.button>
+              <Link href="/contact">
+                <motion.div
+                  className="border-2 border-[#121212] text-[#121212] px-6 py-3 rounded-full font-bold text-sm tracking-wide relative overflow-hidden inline-block"
+                  whileHover={{ scale: 1.02, backgroundColor: "#DC2626", color: "#fff", borderColor: "#DC2626" }}
+                  whileTap={{ scale: 0.98 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 17 }}
+                >
+                  {t("hero.contactUs")}
+                </motion.div>
+              </Link>
             </motion.div>
 
             <motion.div
@@ -251,43 +263,9 @@ export function HeroSection() {
                 />
               </motion.div>
 
-              {/* Badge below image */}
-              <motion.div
-                className="absolute -bottom-4 left-1/2 -translate-x-1/2 inline-flex items-center gap-2 bg-[#121212] text-white px-3 py-1.5 rounded-full text-xs font-mono tracking-wider whitespace-nowrap"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.8 }}
-              >
-                <motion.span
-                  className="w-2 h-2 bg-red-600 rounded-full"
-                  animate={{ scale: [1, 1.2, 1], opacity: [1, 0.7, 1] }}
-                  transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
-                />
-                {t("hero.badge")}
-              </motion.div>
             </motion.div>
           </motion.div>
         </div>
-
-        <motion.div
-          className="absolute bottom-6 left-1/2 -translate-x-1/2"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1.5, duration: 0.8 }}
-        >
-          <motion.div
-            animate={{ y: [0, 8, 0] }}
-            transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
-          >
-            <div className="w-5 h-8 border-2 border-[#121212]/30 rounded-full flex justify-center pt-1.5">
-              <motion.div
-                className="w-1 h-2 bg-[#121212]/30 rounded-full"
-                animate={{ y: [0, 6, 0], opacity: [1, 0.5, 1] }}
-                transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
-              />
-            </div>
-          </motion.div>
-        </motion.div>
       </div>
     </section>
   )
