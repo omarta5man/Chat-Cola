@@ -66,7 +66,7 @@ export function Navigation() {
               transition={{ type: "spring", stiffness: 400, damping: 17 }}
             >
               <Image
-                src="/images/logo.png"
+                src="/images/logo1.png"
                 alt="Chat Cola"
                 fill
                 className="object-contain"

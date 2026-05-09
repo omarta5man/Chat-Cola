@@ -155,7 +155,7 @@ export function ContactPageClient() {
                 <div className="relative">
                   <div className="flex items-center gap-3 mb-6">
                     <div className="relative w-10 h-10">
-                      <Image src="/images/logo.png" alt="Chat Cola" fill className="object-contain" />
+                      <Image src="/images/logo1.png" alt="Chat Cola" fill className="object-contain" />
                     </div>
                     <span className="text-white font-black text-lg tracking-tight">
                       <span className="text-white">Chat</span>
