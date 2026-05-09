@@ -195,13 +195,14 @@ export function Footer() {
       </div>
 
       <motion.div
-        className="absolute bottom-0 left-1/2 -translate-x-1/2 text-[15rem] md:text-[30rem] font-black text-white/[0.02] pointer-events-none select-none leading-none whitespace-nowrap text-center"
+        className="absolute bottom-0 left-1/2 -translate-x-1/2 text-[7rem] sm:text-[10rem] md:text-[30rem] font-black text-white/[0.02] pointer-events-none select-none leading-[0.85] md:leading-none text-center md:whitespace-nowrap w-full md:w-auto"
         initial={{ y: 100, opacity: 0 }}
         whileInView={{ y: 0, opacity: 1 }}
         viewport={{ once: true }}
         transition={{ duration: 1, ease: "easeOut" }}
       >
-        Chat Cola
+        <span className="block md:inline">Chat</span>
+        <span className="block md:inline md:ms-4">Cola</span>
       </motion.div>
     </footer>
   )

@@ -1,49 +1,11 @@
 "use client"
 
-import { motion, useInView } from "framer-motion"
-import { useRef } from "react"
+import { motion } from "framer-motion"
 import { Instagram } from "lucide-react"
-import Image from "next/image"
 import { useLanguage } from "@/lib/language-context"
-
-const instagramPosts = [
-  { image: "/energy-drink-lifestyle-gym-workout.jpg", likes: "2.4k" },
-  { image: "/content-creator-streaming-setup-neon.jpg", likes: "1.8k" },
-  { image: "/skateboarder-urban-street-sunset.jpg", likes: "3.2k" },
-  { image: "/student-studying-library-late-night.jpg", likes: "956" },
-  { image: "/entrepreneur-startup-office-meeting.jpg", likes: "1.5k" },
-  { image: "/athlete-fitness-morning-routine.jpg", likes: "2.1k" },
-]
-
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.06,
-      delayChildren: 0.15,
-    },
-  },
-}
-
-const itemVariants = {
-  hidden: { opacity: 0, scale: 0.8, y: 20 },
-  visible: {
-    opacity: 1,
-    scale: 1,
-    y: 0,
-    transition: {
-      type: "spring",
-      stiffness: 100,
-      damping: 20,
-    },
-  },
-}
 
 export function SocialSection() {
   const { t, isRTL } = useLanguage()
-  const ref = useRef(null)
-  const isInView = useInView(ref, { once: true, margin: "-50px" })
 
   return (
     <section id="creators" className="relative py-16 bg-[#121212] overflow-hidden" dir={isRTL ? "rtl" : "ltr"}>
@@ -78,52 +40,7 @@ export function SocialSection() {
         </motion.div>
 
         <motion.div
-          ref={ref}
-          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3"
-          variants={containerVariants}
-          initial="hidden"
-          animate={isInView ? "visible" : "hidden"}
-        >
-          {instagramPosts.map((post, index) => (
-            <motion.div
-              key={index}
-              variants={itemVariants}
-              whileHover={{
-                scale: 1.05,
-                zIndex: 10,
-                transition: { type: "spring", stiffness: 300, damping: 20 },
-              }}
-              className="relative aspect-square rounded-xl overflow-hidden group cursor-pointer"
-            >
-              <Image
-                src={post.image || "/placeholder.svg"}
-                alt={`Instagram post ${index + 1}`}
-                fill
-                className="object-cover grayscale group-hover:grayscale-0 transition-all duration-500"
-              />
-              <motion.div
-                className="absolute inset-0 bg-red-600/0 group-hover:bg-red-600/20 flex items-center justify-center"
-                initial={{ opacity: 0 }}
-                whileHover={{ opacity: 1 }}
-                transition={{ duration: 0.3 }}
-              >
-                <motion.div
-                  className="flex items-center gap-1 text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                  initial={{ y: 10 }}
-                  whileHover={{ y: 0 }}
-                >
-                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" />
-                  </svg>
-                  <span className="font-mono text-xs">Liked</span>
-                </motion.div>
-              </motion.div>
-            </motion.div>
-          ))}
-        </motion.div>
-
-        <motion.div
-          className="flex justify-center mt-8"
+          className="flex justify-center mt-4"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}

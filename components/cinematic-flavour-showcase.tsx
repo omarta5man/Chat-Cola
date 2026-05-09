@@ -1,9 +1,10 @@
 "use client"
 
 import { useState, useRef, useEffect } from "react"
-import { motion, AnimatePresence } from "framer-motion"
+import { motion, AnimatePresence, type PanInfo } from "framer-motion"
 import Image from "next/image"
-import { ChevronLeft, ChevronRight } from "lucide-react"
+import Link from "next/link"
+import { ChevronLeft, ChevronRight, X } from "lucide-react"
 import { useInView } from "framer-motion"
 import { useLanguage } from "@/lib/language-context"
 
@@ -194,8 +195,24 @@ export function CinematicFlavourShowcase() {
   const [activeIndex, setActiveIndex] = useState(0)
   const [isAutoPlaying, setIsAutoPlaying] = useState(true)
   const [bubbles, setBubbles] = useState<Bubble[]>([])
+  const [showProductModal, setShowProductModal] = useState(false)
   const containerRef = useRef(null)
   const isInView = useInView(containerRef, { once: true, margin: "-100px" })
+
+  const handleSwipe = (_: any, info: PanInfo) => {
+    const threshold = 50
+    if (info.offset.x < -threshold) {
+      // Swiped left
+      setIsAutoPlaying(false)
+      if (isRTL) setActiveIndex((p) => (p - 1 + flavours.length) % flavours.length)
+      else setActiveIndex((p) => (p + 1) % flavours.length)
+    } else if (info.offset.x > threshold) {
+      // Swiped right
+      setIsAutoPlaying(false)
+      if (isRTL) setActiveIndex((p) => (p + 1) % flavours.length)
+      else setActiveIndex((p) => (p - 1 + flavours.length) % flavours.length)
+    }
+  }
 
   useEffect(() => {
     setBubbles(generateBubbles(20))
@@ -328,26 +345,6 @@ export function CinematicFlavourShowcase() {
             animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: isRTL ? 40 : -40 }}
             transition={{ duration: 0.6, delay: 0.2 }}
           >
-            {/* Mobile controls */}
-            <div className="flex items-center gap-3 lg:hidden mb-4 justify-center">
-              <motion.button
-                onClick={prevFlavour}
-                className="flex items-center justify-center w-10 h-10 rounded-full border-2 border-white/30 hover:border-white hover:bg-white/10 transition-colors"
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-              >
-                {isRTL ? <ChevronRight className="w-5 h-5 text-white" /> : <ChevronLeft className="w-5 h-5 text-white" />}
-              </motion.button>
-              <motion.button
-                onClick={nextFlavour}
-                className="flex items-center justify-center w-10 h-10 rounded-full border-2 border-white/30 hover:border-white hover:bg-white/10 transition-colors"
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-              >
-                {isRTL ? <ChevronLeft className="w-5 h-5 text-white" /> : <ChevronRight className="w-5 h-5 text-white" />}
-              </motion.button>
-            </div>
-
             <AnimatePresence mode="wait">
               <motion.div
                 key={activeIndex}
@@ -380,9 +377,13 @@ export function CinematicFlavourShowcase() {
                   {t("flavours.sizes")}: {activeFlavour.sizes}
                 </p>
 
-                <div className="flex flex-col gap-2 pt-4">
+                <div className="flex flex-col sm:flex-row lg:flex-col gap-2 pt-4 w-full">
                   <motion.button
-                    className="px-4 py-2.5 rounded-lg font-bold text-sm tracking-wide text-white relative overflow-hidden"
+                    onClick={() => {
+                      setIsAutoPlaying(false)
+                      setShowProductModal(true)
+                    }}
+                    className="w-full px-4 py-2.5 rounded-lg font-bold text-xs sm:text-sm tracking-wide text-white relative overflow-hidden"
                     style={{ backgroundColor: activeFlavour.accentColor }}
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
@@ -395,14 +396,16 @@ export function CinematicFlavourShowcase() {
                     />
                     <span className="relative z-10">{t("flavours.viewProduct")}</span>
                   </motion.button>
-                  <motion.button
-                    className="px-4 py-2.5 rounded-lg font-bold text-sm tracking-wide border-2 text-white relative overflow-hidden"
-                    style={{ borderColor: activeFlavour.accentColor, color: activeFlavour.accentColor }}
-                    whileHover={{ scale: 1.02, backgroundColor: activeFlavour.accentColor, color: "#fff" }}
-                    whileTap={{ scale: 0.98 }}
-                  >
-                    <span className="relative z-10">{t("flavours.askSupply")}</span>
-                  </motion.button>
+                  <Link href="/contact" className="w-full">
+                    <motion.div
+                      className="w-full px-4 py-2.5 rounded-lg font-bold text-xs sm:text-sm tracking-wide border-2 relative overflow-hidden text-center"
+                      style={{ borderColor: activeFlavour.accentColor, color: activeFlavour.accentColor }}
+                      whileHover={{ scale: 1.02, backgroundColor: activeFlavour.accentColor, color: "#fff" }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      <span className="relative z-10">{t("flavours.askSupply")}</span>
+                    </motion.div>
+                  </Link>
                 </div>
               </motion.div>
             </AnimatePresence>
@@ -410,10 +413,14 @@ export function CinematicFlavourShowcase() {
 
           {/* Center Stage - Large Product Image */}
           <motion.div
-            className="lg:col-span-6 lg:order-2 relative flex items-center justify-center min-h-[400px] lg:min-h-[550px]"
+            className="lg:col-span-6 lg:order-2 relative flex flex-col items-center justify-center min-h-[400px] lg:min-h-[550px] touch-pan-y"
             initial={{ opacity: 0, scale: 0.8 }}
             animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }}
             transition={{ duration: 0.6, delay: 0.3 }}
+            drag="x"
+            dragConstraints={{ left: 0, right: 0 }}
+            dragElastic={0.2}
+            onDragEnd={handleSwipe}
           >
             {/* Large spotlight glow */}
             <motion.div
@@ -461,12 +468,34 @@ export function CinematicFlavourShowcase() {
                     alt={t(activeFlavour.nameKey)}
                     width={380}
                     height={570}
-                    className="object-contain drop-shadow-2xl"
+                    className="object-contain drop-shadow-2xl pointer-events-none select-none"
+                    draggable={false}
                     priority
                   />
                 </motion.div>
               </motion.div>
             </AnimatePresence>
+
+            {/* Mobile arrows BELOW the image */}
+            <div className="flex lg:hidden items-center gap-4 mt-6 relative z-20">
+              <motion.button
+                onClick={prevFlavour}
+                className="flex items-center justify-center w-11 h-11 rounded-full border-2 border-white/30 hover:border-white hover:bg-white/10 transition-colors"
+                whileTap={{ scale: 0.9 }}
+              >
+                {isRTL ? <ChevronRight className="w-5 h-5 text-white" /> : <ChevronLeft className="w-5 h-5 text-white" />}
+              </motion.button>
+              <p className={`text-white/40 text-[10px] tracking-widest uppercase ${isRTL ? "font-arabic" : "font-mono"}`}>
+                {language === "ar" ? "اسحب أو اضغط" : "Swipe or tap"}
+              </p>
+              <motion.button
+                onClick={nextFlavour}
+                className="flex items-center justify-center w-11 h-11 rounded-full border-2 border-white/30 hover:border-white hover:bg-white/10 transition-colors"
+                whileTap={{ scale: 0.9 }}
+              >
+                {isRTL ? <ChevronLeft className="w-5 h-5 text-white" /> : <ChevronRight className="w-5 h-5 text-white" />}
+              </motion.button>
+            </div>
           </motion.div>
 
           {/* Right Side - Taste Profile (Desktop only) */}
@@ -599,6 +628,155 @@ export function CinematicFlavourShowcase() {
           ))}
         </div>
       </motion.div>
+
+      {/* Product Modal */}
+      <AnimatePresence>
+        {showProductModal && (
+          <motion.div
+            className="fixed inset-0 z-[100] flex items-center justify-center p-4"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            dir={isRTL ? "rtl" : "ltr"}
+          >
+            {/* Backdrop */}
+            <motion.div
+              className="absolute inset-0 bg-black/80 backdrop-blur-md"
+              onClick={() => setShowProductModal(false)}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            />
+
+            <motion.div
+              className="relative w-full max-w-4xl bg-gradient-to-br from-[#1a1a1a] to-[#0a0a0a] border border-white/10 rounded-3xl overflow-hidden shadow-2xl"
+              initial={{ opacity: 0, scale: 0.9, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: 20 }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            >
+              {/* Glow */}
+              <div
+                className="absolute -top-32 -right-32 w-96 h-96 rounded-full blur-[120px] pointer-events-none"
+                style={{ backgroundColor: activeFlavour.accentColor, opacity: 0.3 }}
+              />
+
+              {/* Close */}
+              <button
+                onClick={() => setShowProductModal(false)}
+                className={`absolute top-4 ${isRTL ? "left-4" : "right-4"} z-10 w-10 h-10 rounded-full bg-white/5 hover:bg-white/15 border border-white/10 flex items-center justify-center transition-colors`}
+              >
+                <X className="w-5 h-5 text-white" />
+              </button>
+
+              <div className="grid md:grid-cols-2 gap-0 max-h-[85vh] overflow-y-auto">
+                {/* Image side */}
+                <div
+                  className="relative flex items-center justify-center p-8 md:p-12 min-h-[320px] md:min-h-[520px]"
+                  style={{
+                    background: `radial-gradient(circle at center, ${activeFlavour.accentColor}25, transparent 70%)`,
+                  }}
+                >
+                  <motion.div
+                    animate={{ y: [0, -12, 0], rotate: [0, 1.5, 0, -1.5, 0] }}
+                    transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+                    className="relative"
+                  >
+                    <Image
+                      src={activeFlavour.image}
+                      alt={t(activeFlavour.nameKey)}
+                      width={420}
+                      height={630}
+                      className="object-contain drop-shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
+                    />
+                  </motion.div>
+                </div>
+
+                {/* Info side */}
+                <div className={`p-6 md:p-10 flex flex-col gap-5 ${isRTL ? "text-right" : "text-left"}`}>
+                  <div>
+                    <span
+                      className="font-mono text-[10px] tracking-[0.3em] uppercase"
+                      style={{ color: activeFlavour.accentColor }}
+                    >
+                      {language === "ar" ? activeFlavour.tags.ar[0] : activeFlavour.tags.en[0]}
+                    </span>
+                    <h3 className={`text-3xl md:text-4xl font-black text-white tracking-tighter mt-2 ${isRTL ? "font-arabic" : ""}`}>
+                      {t(activeFlavour.nameKey)}
+                    </h3>
+                  </div>
+
+                  <p className={`text-white/70 text-sm leading-relaxed ${isRTL ? "font-arabic" : "font-mono"}`}>
+                    {language === "ar" ? activeFlavour.descriptionAr : activeFlavour.descriptionEn}
+                  </p>
+
+                  <div className={`flex flex-wrap gap-2 ${isRTL ? "justify-end" : "justify-start"}`}>
+                    {(language === "ar" ? activeFlavour.tags.ar : activeFlavour.tags.en).map((tag) => (
+                      <span
+                        key={tag}
+                        className="px-3 py-1 rounded-full text-xs font-mono"
+                        style={{
+                          backgroundColor: `${activeFlavour.accentColor}20`,
+                          color: activeFlavour.accentColor,
+                          border: `1px solid ${activeFlavour.accentColor}40`,
+                        }}
+                      >
+                        {tag}
+                      </span>
+                    ))}
+                  </div>
+
+                  {/* Taste profile cards */}
+                  <div className="grid grid-cols-3 gap-2 pt-2">
+                    {[
+                      { labelKey: "flavours.taste", value: activeFlavour.tasteProfile.taste },
+                      { labelKey: "flavours.intensity", value: activeFlavour.tasteProfile.intensity },
+                      { labelKey: "flavours.freshness", value: activeFlavour.tasteProfile.freshness },
+                    ].map((item) => (
+                      <div
+                        key={item.labelKey}
+                        className="bg-white/[0.03] border border-white/10 rounded-xl p-3"
+                      >
+                        <p className="text-white/40 text-[9px] uppercase tracking-widest font-mono mb-1">
+                          {t(item.labelKey)}
+                        </p>
+                        <p className={`text-white text-xs font-bold ${isRTL ? "font-arabic" : ""}`}>
+                          {language === "ar" ? item.value.ar : item.value.en}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Sizes */}
+                  <div className="bg-white/[0.03] border border-white/10 rounded-xl px-4 py-3">
+                    <p className="text-white/40 text-[10px] uppercase tracking-widest font-mono mb-1">
+                      {t("flavours.sizes")}
+                    </p>
+                    <p className="text-white text-sm font-bold">{activeFlavour.sizes}</p>
+                  </div>
+
+                  <Link href="/contact" className="mt-auto">
+                    <motion.div
+                      className="w-full px-5 py-3 rounded-xl font-bold text-sm tracking-wide text-white text-center relative overflow-hidden"
+                      style={{ backgroundColor: activeFlavour.accentColor }}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                    >
+                      <motion.span
+                        className="absolute inset-0 bg-white/20"
+                        initial={{ x: "-100%" }}
+                        whileHover={{ x: "100%" }}
+                        transition={{ duration: 0.5 }}
+                      />
+                      <span className="relative z-10">{t("flavours.askSupply")}</span>
+                    </motion.div>
+                  </Link>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   )
 }

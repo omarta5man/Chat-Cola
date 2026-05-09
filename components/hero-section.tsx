@@ -113,10 +113,10 @@ export function HeroSection() {
               {t("hero.badge")}
             </motion.div>
 
-            <div className="space-y-1 overflow-hidden">
+            <div className={`space-y-1 ${isRTL ? "" : "overflow-hidden"}`}>
               <motion.h1
                 style={{ x: textX1 }}
-                className={`text-5xl md:text-7xl font-black tracking-tighter text-[#121212] leading-[0.9] ${isRTL ? "font-arabic" : ""}`}
+                className={`text-5xl md:text-7xl font-black tracking-tighter text-[#121212] ${isRTL ? "font-arabic leading-[1.25] pt-2" : "leading-[0.9]"}`}
               >
                 <motion.span
                   variants={fadeUpVariants}
@@ -130,7 +130,7 @@ export function HeroSection() {
               </motion.h1>
               <motion.h1
                 style={{ x: textX2 }}
-                className={`text-5xl md:text-7xl font-black tracking-tighter text-[#121212] leading-[0.9] ${isRTL ? "font-arabic" : ""}`}
+                className={`text-5xl md:text-7xl font-black tracking-tighter text-[#121212] ${isRTL ? "font-arabic leading-[1.25]" : "leading-[0.9]"}`}
               >
                 <motion.span
                   variants={fadeUpVariants}
