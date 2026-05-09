@@ -61,17 +61,28 @@ export function Navigation() {
         <div className={`flex items-center justify-between ${scrolled ? "px-4 py-2" : "px-6 py-4"}`}>
           <Link href="/" className="flex items-center gap-2">
             <motion.div
-              className={`relative transition-all duration-300 ${scrolled ? "w-9 h-9" : "w-11 h-11"}`}
+              className={`relative transition-all duration-300 ${scrolled ? "w-14 h-14" : "w-16 h-16"}`}
               whileHover={{ scale: 1.08, rotate: -3 }}
               transition={{ type: "spring", stiffness: 400, damping: 17 }}
             >
-              <Image
-                src="/images/logo1.png"
-                alt="Chat Cola"
-                fill
-                className="object-contain"
-                priority
-              />
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={scrolled ? "dark" : "light"}
+                  initial={{ opacity: 0, scale: 0.85 }}
+                  animate={{ opacity: 1, scale: 1 }}
+                  exit={{ opacity: 0, scale: 0.85 }}
+                  transition={{ duration: 0.25, ease: [0.25, 0.4, 0.25, 1] }}
+                  className="absolute inset-0"
+                >
+                  <Image
+                    src={scrolled ? "/images/logo2.png" : "/images/logo1.png"}
+                    alt="Chat Cola"
+                    fill
+                    className="object-contain"
+                    priority
+                  />
+                </motion.div>
+              </AnimatePresence>
             </motion.div>
           </Link>
 
