@@ -198,7 +198,7 @@ export function Footer() {
       </div>
 
       <motion.div
-        className="absolute bottom-0 left-1/2 -translate-x-1/2 text-[10rem] sm:text-[14rem] md:text-[30rem] font-black text-white/[0.02] pointer-events-none select-none leading-[0.85] md:leading-none text-center md:whitespace-nowrap w-full md:w-auto"
+        className="absolute bottom-0 left-1/2 -translate-x-1/2 text-[10rem] sm:text-[12rem] md:text-[14rem] lg:text-[18rem] font-black text-white/[0.02] pointer-events-none select-none leading-[0.85] md:leading-none text-center md:whitespace-nowrap w-full md:w-auto"
         initial={{ y: 100, opacity: 0 }}
         whileInView={{ y: 0, opacity: 1 }}
         viewport={{ once: true }}

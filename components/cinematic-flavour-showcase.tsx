@@ -413,7 +413,7 @@ export function CinematicFlavourShowcase() {
 
           {/* Center Stage - Large Product Image */}
           <motion.div
-            className="lg:col-span-6 lg:order-2 relative flex flex-col items-center justify-center min-h-[400px] lg:min-h-[550px] touch-pan-y"
+            className="lg:col-span-6 lg:order-2 relative flex flex-col items-center justify-center min-h-[360px] lg:min-h-[460px] touch-pan-y"
             initial={{ opacity: 0, scale: 0.8 }}
             animate={isInView ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 0.8 }}
             transition={{ duration: 0.6, delay: 0.3 }}
@@ -462,13 +462,13 @@ export function CinematicFlavourShowcase() {
                     repeat: Infinity,
                     ease: "easeInOut",
                   }}
-                  className="relative w-[280px] h-[280px] sm:w-[360px] sm:h-[360px] md:w-[480px] md:h-[480px] lg:w-[560px] lg:h-[560px]"
+                  className="relative w-[260px] h-[260px] sm:w-[320px] sm:h-[320px] md:w-[360px] md:h-[360px] lg:w-[400px] lg:h-[400px]"
                 >
                   <Image
                     src={activeFlavour.image}
                     alt={t(activeFlavour.nameKey)}
                     fill
-                    sizes="(max-width: 640px) 280px, (max-width: 768px) 360px, (max-width: 1024px) 480px, 560px"
+                    sizes="(max-width: 640px) 260px, (max-width: 768px) 320px, (max-width: 1024px) 360px, 400px"
                     className="object-contain drop-shadow-2xl pointer-events-none select-none"
                     draggable={false}
                     priority
