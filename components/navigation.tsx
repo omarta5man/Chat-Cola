@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import Link from "next/link"
 import Image from "next/image"
+import { useRouter, usePathname } from "next/navigation"
 import { useLenis } from "lenis/react"
 import { Menu, X, Globe } from "lucide-react"
 import { useLanguage } from "@/lib/language-context"
@@ -12,7 +13,13 @@ export function Navigation() {
   const [scrolled, setScrolled] = useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const lenis = useLenis()
+  const router = useRouter()
+  const pathname = usePathname()
   const { language, setLanguage, t, isRTL } = useLanguage()
+
+  // On non-home pages keep the dark/scrolled style permanently
+  const onHome = pathname === "/"
+  const dark = scrolled || !onHome
 
   useEffect(() => {
     const handleScroll = () => {
@@ -23,11 +30,18 @@ export function Navigation() {
   }, [])
 
   const scrollToSection = (id: string) => {
+    setMobileMenuOpen(false)
+    if (pathname !== "/") {
+      // Navigate to home with hash; home page will pick it up
+      router.push(`/${id}`)
+      return
+    }
     const element = document.querySelector(id)
     if (element && lenis) {
       lenis.scrollTo(element, { offset: -100 })
+    } else if (element) {
+      ;(element as HTMLElement).scrollIntoView({ behavior: "smooth" })
     }
-    setMobileMenuOpen(false)
   }
 
   const navLinks = [
@@ -46,28 +60,28 @@ export function Navigation() {
       animate={{ y: 0 }}
       transition={{ type: "spring", stiffness: 100, damping: 20 }}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
-        scrolled ? "py-3" : "py-0"
+        dark ? "py-3" : "py-0"
       }`}
       dir={isRTL ? "rtl" : "ltr"}
     >
       <motion.div
         className={`mx-auto transition-all duration-500 ease-out ${
-          scrolled
+          dark
             ? "max-w-3xl bg-[#121212]/90 backdrop-blur-xl border border-white/10 shadow-2xl shadow-black/20 rounded-full mx-4 md:mx-auto"
             : "max-w-7xl bg-transparent"
         }`}
         layout
       >
-        <div className={`flex items-center justify-between ${scrolled ? "px-4 py-2" : "px-6 py-4"}`}>
+        <div className={`flex items-center justify-between ${dark ? "px-4 py-2" : "px-6 py-4"}`}>
           <Link href="/" className="flex items-center gap-2">
             <motion.div
-              className={`relative transition-all duration-300 ${scrolled ? "w-14 h-14" : "w-16 h-16"}`}
+              className={`relative transition-all duration-300 ${dark ? "w-14 h-14" : "w-16 h-16"}`}
               whileHover={{ scale: 1.08, rotate: -3 }}
               transition={{ type: "spring", stiffness: 400, damping: 17 }}
             >
               <AnimatePresence mode="wait">
                 <motion.div
-                  key={scrolled ? "dark" : "light"}
+                  key={dark ? "dark" : "light"}
                   initial={{ opacity: 0, scale: 0.85 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.85 }}
@@ -75,7 +89,7 @@ export function Navigation() {
                   className="absolute inset-0"
                 >
                   <Image
-                    src={scrolled ? "/images/logo2.png" : "/images/logo1.png"}
+                    src={dark ? "/images/logo2.png" : "/images/logo1.png"}
                     alt="Chat Cola"
                     fill
                     className="object-contain"
@@ -92,7 +106,7 @@ export function Navigation() {
                 key={item.label}
                 onClick={() => scrollToSection(item.href)}
                 className={`text-sm font-medium tracking-wide transition-colors relative ${
-                  scrolled ? "text-white/80 hover:text-red-500" : "text-[#121212]/80 hover:text-[#121212]"
+                  dark ? "text-white/80 hover:text-red-500" : "text-[#121212]/80 hover:text-[#121212]"
                 }`}
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -114,7 +128,7 @@ export function Navigation() {
             <motion.button
               onClick={toggleLanguage}
               className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-bold tracking-wide transition-all ${
-                scrolled
+                dark
                   ? "bg-white/10 text-white hover:bg-white/20"
                   : "bg-[#121212]/10 text-[#121212] hover:bg-[#121212]/20"
               }`}
@@ -147,7 +161,7 @@ export function Navigation() {
             <motion.button
               onClick={toggleLanguage}
               className={`flex items-center justify-center w-8 h-8 rounded-full text-xs font-bold ${
-                scrolled ? "bg-white/10 text-white" : "bg-[#121212]/10 text-[#121212]"
+                dark ? "bg-white/10 text-white" : "bg-[#121212]/10 text-[#121212]"
               }`}
               whileTap={{ scale: 0.9 }}
             >
@@ -168,7 +182,7 @@ export function Navigation() {
                     exit={{ rotate: 90, opacity: 0 }}
                     transition={{ duration: 0.2 }}
                   >
-                    <X className={scrolled ? "text-white" : "text-[#121212]"} />
+                    <X className={dark ? "text-white" : "text-[#121212]"} />
                   </motion.div>
                 ) : (
                   <motion.div
@@ -178,7 +192,7 @@ export function Navigation() {
                     exit={{ rotate: -90, opacity: 0 }}
                     transition={{ duration: 0.2 }}
                   >
-                    <Menu className={scrolled ? "text-white" : "text-[#121212]"} />
+                    <Menu className={dark ? "text-white" : "text-[#121212]"} />
                   </motion.div>
                 )}
               </AnimatePresence>

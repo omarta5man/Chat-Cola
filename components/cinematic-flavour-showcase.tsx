@@ -462,12 +462,13 @@ export function CinematicFlavourShowcase() {
                     repeat: Infinity,
                     ease: "easeInOut",
                   }}
+                  className="relative w-[280px] h-[280px] sm:w-[360px] sm:h-[360px] md:w-[480px] md:h-[480px] lg:w-[560px] lg:h-[560px]"
                 >
                   <Image
                     src={activeFlavour.image}
                     alt={t(activeFlavour.nameKey)}
-                    width={380}
-                    height={570}
+                    fill
+                    sizes="(max-width: 640px) 280px, (max-width: 768px) 360px, (max-width: 1024px) 480px, 560px"
                     className="object-contain drop-shadow-2xl pointer-events-none select-none"
                     draggable={false}
                     priority
@@ -591,11 +592,12 @@ export function CinematicFlavourShowcase() {
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
             >
-              <div className="relative w-6 h-8 overflow-hidden">
+              <div className="relative w-7 h-7 overflow-hidden">
                 <Image
                   src={flavour.image}
                   alt={t(flavour.nameKey)}
                   fill
+                  sizes="28px"
                   className="object-contain"
                 />
               </div>
@@ -672,7 +674,7 @@ export function CinematicFlavourShowcase() {
               <div className="grid md:grid-cols-2 gap-0 max-h-[85vh] overflow-y-auto">
                 {/* Image side */}
                 <div
-                  className="relative flex items-center justify-center p-8 md:p-12 min-h-[320px] md:min-h-[520px]"
+                  className="relative flex items-center justify-center p-6 md:p-10"
                   style={{
                     background: `radial-gradient(circle at center, ${activeFlavour.accentColor}25, transparent 70%)`,
                   }}
@@ -680,13 +682,13 @@ export function CinematicFlavourShowcase() {
                   <motion.div
                     animate={{ y: [0, -12, 0], rotate: [0, 1.5, 0, -1.5, 0] }}
                     transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-                    className="relative"
+                    className="relative w-[260px] h-[260px] sm:w-[340px] sm:h-[340px] md:w-[440px] md:h-[440px]"
                   >
                     <Image
                       src={activeFlavour.image}
                       alt={t(activeFlavour.nameKey)}
-                      width={420}
-                      height={630}
+                      fill
+                      sizes="(max-width: 768px) 340px, 440px"
                       className="object-contain drop-shadow-[0_20px_50px_rgba(0,0,0,0.5)]"
                     />
                   </motion.div>

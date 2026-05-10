@@ -4,7 +4,7 @@ import { useState } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import Link from "next/link"
 import Image from "next/image"
-import { MapPin, Phone, Mail, Instagram, ArrowLeft, ArrowRight, Check } from "lucide-react"
+import { MapPin, Phone, Mail, Instagram, Facebook, ArrowLeft, ArrowRight, Check } from "lucide-react"
 import { useLanguage } from "@/lib/language-context"
 import { Navigation } from "@/components/navigation"
 import { Footer } from "@/components/footer"
@@ -66,6 +66,12 @@ export function ContactPageClient() {
       labelKey: "contact.instagram",
       valueKey: "contact.instagramValue",
       href: "https://instagram.com/chat.cola",
+    },
+    {
+      icon: Facebook,
+      labelKey: "contact.facebook",
+      valueKey: "contact.facebookValue",
+      href: "https://www.facebook.com/chatcola",
     },
   ]
 

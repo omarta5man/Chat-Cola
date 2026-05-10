@@ -1,8 +1,10 @@
 "use client"
 
 import { motion, useInView } from "framer-motion"
-import { useState, useRef } from "react"
+import { useRef } from "react"
 import Link from "next/link"
+import Image from "next/image"
+import { Facebook, Instagram } from "lucide-react"
 import { useLanguage } from "@/lib/language-context"
 
 const containerVariants = {
@@ -31,7 +33,6 @@ const itemVariants = {
 
 export function Footer() {
   const { t, isRTL, language } = useLanguage()
-  const [isHovering, setIsHovering] = useState(false)
   const footerRef = useRef(null)
   const isInView = useInView(footerRef, { once: true, margin: "-100px" })
 
@@ -151,7 +152,7 @@ export function Footer() {
         </motion.div>
 
         <motion.div
-          className={`flex flex-col md:flex-row justify-between items-center pt-6 border-t border-white/10 gap-3 ${isRTL ? "md:flex-row-reverse" : ""}`}
+          className={`flex flex-col md:flex-row justify-between items-center pt-6 border-t border-white/10 gap-4 ${isRTL ? "md:flex-row-reverse" : ""}`}
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
@@ -162,40 +163,42 @@ export function Footer() {
             whileHover={{ scale: 1.05 }}
             transition={{ type: "spring", stiffness: 400, damping: 17 }}
           >
-            <span className="text-xl font-black">
-              <span className="text-white">Chat</span>
-              <span className="text-red-600">Cola</span>
-            </span>
+            <div className="relative w-12 h-12">
+              <Image src="/images/logo2.png" alt="Chat Cola" fill className="object-contain" />
+            </div>
           </motion.div>
 
           <p className={`text-white/40 text-xs ${isRTL ? "font-arabic" : "font-mono"}`}>{t("footer.copyright")}</p>
 
-          <motion.p
-            className={`text-white/30 text-xs cursor-pointer ${isRTL ? "font-arabic" : "font-mono"}`}
-            onHoverStart={() => setIsHovering(true)}
-            onHoverEnd={() => setIsHovering(false)}
-            animate={
-              isHovering
-                ? {
-                    rotate: [0, -5, 5, -5, 5, 0],
-                    scale: [1, 1.1, 1],
-                    color: "#AFFF00",
-                  }
-                : {
-                    rotate: 0,
-                    scale: 1,
-                    color: "rgba(255,255,255,0.3)",
-                  }
-            }
-            transition={{ duration: 0.5 }}
-          >
-            {t("footer.madeWith")}
-          </motion.p>
+          <div className="flex items-center gap-3">
+            <motion.a
+              href="https://www.facebook.com/chatcola"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Facebook"
+              className="w-9 h-9 rounded-full border border-white/15 flex items-center justify-center text-white/60 hover:text-white hover:border-red-600 hover:bg-red-600/10 transition-all"
+              whileHover={{ scale: 1.1, y: -2 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <Facebook className="w-4 h-4" />
+            </motion.a>
+            <motion.a
+              href="https://instagram.com/chat.cola"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Instagram"
+              className="w-9 h-9 rounded-full border border-white/15 flex items-center justify-center text-white/60 hover:text-white hover:border-red-600 hover:bg-red-600/10 transition-all"
+              whileHover={{ scale: 1.1, y: -2 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              <Instagram className="w-4 h-4" />
+            </motion.a>
+          </div>
         </motion.div>
       </div>
 
       <motion.div
-        className="absolute bottom-0 left-1/2 -translate-x-1/2 text-[7rem] sm:text-[10rem] md:text-[30rem] font-black text-white/[0.02] pointer-events-none select-none leading-[0.85] md:leading-none text-center md:whitespace-nowrap w-full md:w-auto"
+        className="absolute bottom-0 left-1/2 -translate-x-1/2 text-[10rem] sm:text-[14rem] md:text-[30rem] font-black text-white/[0.02] pointer-events-none select-none leading-[0.85] md:leading-none text-center md:whitespace-nowrap w-full md:w-auto"
         initial={{ y: 100, opacity: 0 }}
         whileInView={{ y: 0, opacity: 1 }}
         viewport={{ once: true }}
